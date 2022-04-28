@@ -69,7 +69,10 @@ def create_dataloaders(data_loc, batch_size):
 # %% test if the dataloaders work
 if __name__ == "__main__":
     # define parameters
-    data_loc = 'D://5LSL0-Datasets' #change the datalocation to something that works for you
+    # %% test if the dataloaders work
+    absolutepath = os.path.abspath(__file__) # curent file directory
+    fileDirectory = os.path.dirname(absolutepath) # add the absolutepath 
+    # data_loc = 'D://5LSL0-Datasets' #change the datalocation to something that works for you
     batch_size = 64
     
     # get dataloader

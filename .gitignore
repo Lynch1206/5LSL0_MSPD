@@ -1,0 +1,16 @@
+.vscode/
+.venv/
+.venc/
+.envserver/
+data_sets/
+db.sqlite3
+.ipynb_checkpoints
+.pytest_cache
+**/.DS_Store
+**/__pycache__
+variables/
+*.pkl
+*.h5
+*.html
+.python-version
+token_key.txt

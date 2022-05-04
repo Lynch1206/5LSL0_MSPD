@@ -1,3 +1,6 @@
+*.html
+*.exe
+token.*
 .vscode/
 .venv/
 .venc/
@@ -11,6 +14,4 @@ db.sqlite3
 variables/
 *.pkl
 *.h5
-*.html
 .python-version
-token_key.txt

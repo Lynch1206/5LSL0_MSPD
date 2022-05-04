@@ -159,8 +159,10 @@ with torch.no_grad():
 # Train the model
 loss_list_train = []
 loss_list_validation = []
-num_epochs = 50
+num_epochs = 501
 for epoch in range(num_epochs):
+    loss_t = 0
+    loss_v = 0
     for (x_clean_train, x_noisy_train, labels_train),(x_clean_val, x_noisy_val, labels_val) in zip(train_set,val_set):
         # Transfer to GPU
         x_clean_train = x_clean_train.cuda()
@@ -174,25 +176,24 @@ for epoch in range(num_epochs):
         outputs_validation = model(x_noisy_val)
         loss_train = criterion(outputs_train, x_clean_train.resize(1024))
         loss_validation = criterion(outputs_validation, x_clean_val.resize(1024))
-        # loss_train = criterion(outputs_train, x_clean_train.resize(labels_train.size(0),1024))
-        # loss_validation = criterion(outputs_validation, x_clean_val.resize(labels_val.size(0),1024))
-        loss_list_train.append(loss_train.item())
-        loss_list_validation.append(loss_validation.item())
+        loss_t += loss_train.item()
+        loss_v += loss_validation.item()
 
         # Backprop and perform SGD optimisation on training set
         optimizer.zero_grad()
         loss_train.backward()
         # Perform the SGD optimizer
         optimizer.step()
+    
+    loss_list_train.append(loss_t)
+    loss_list_validation.append(loss_v)
     # Save the model 
     torch.save(model, MODEL__DIR + 'epoch'+ str(epoch+1)+ 'FNN_net_model.ckpt')
 
 # Plot the loss 
-p = figure(y_axis_label='Train Loss ', width=850, y_range=(0, 1), title='Train and validation losses')
-p.extra_y_ranges = {'Validation Loss': Range1d(start=0, end=100)}
-p.add_layout(LinearAxis(y_range_name='Validation Loss', axis_label='Validation Loss'), 'right')
+p = figure(x_axis_label='Number of epochs',y_axis_label='Train Loss', width=850,x_range = (0,num_epochs), title='Train and validation losses')
 p.line(np.arange(len(loss_list_train)), loss_list_train, legend_label="Train Loss")
-p.line(np.arange(len(loss_list_validation)), loss_list_validation, legend_label="Validation Loss",y_range_name='Validation Loss', color='red')
+p.line(np.arange(len(loss_list_validation)), loss_list_validation, legend_label="Validation Loss", color='red')
 p.legend.location = "top_right"
 show(p)
 
